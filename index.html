@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,32 +8,94 @@
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#090711;color:white;font-family:Arial,sans-serif}
-header{padding:25px 18px;text-align:center;background:#130c25;border-bottom:1px solid #8b35ff}
-h1{color:#b56aff;font-size:38px;margin:0}
-header p{color:#c5b5d8}
-main{padding:20px;max-width:900px;margin:auto}
-h2{color:#c58aff}
-.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:14px}
-.game{background:#191329;border:1px solid #553080;border-radius:14px;padding:18px;text-align:center}
-.emoji{font-size:42px}
-button{background:#8b35ff;color:white;border:0;padding:10px 16px;border-radius:8px;font-weight:bold}
-footer{text-align:center;color:#887a9c;padding:30px}
+header{text-align:center;padding:35px 15px;background:linear-gradient(135deg,#16082d,#090711)}
+.logo{font-size:48px;font-weight:900;color:#bd75ff;letter-spacing:5px}
+header p{color:#c9b3e8}
+main{max-width:1000px;margin:auto;padding:20px}
+h2{color:#c78aff}
+input{width:100%;padding:15px;border-radius:12px;border:1px solid #8c43ce;background:#191329;color:white;font-size:16px;margin:15px 0}
+.filters{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px}
+.filters button,.game button{background:#8b35ff;color:white;border:0;border-radius:9px;padding:11px 16px;font-weight:bold}
+.filters button:active{background:#bd75ff}
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:15px}
+.game{background:#191329;border:1px solid #60338b;border-radius:15px;padding:18px;text-align:center}
+.game .emoji{font-size:45px}
+.game p{color:#c3b5d5;font-size:14px}
+.game button{margin-top:8px}
+footer{text-align:center;color:#8c7b9d;padding:30px}
 </style>
 </head>
 <body>
 <header>
-<h1>NEXUS</h1>
+<div class="logo">NEXUS</div>
 <p>TON UNIVERS GAMING</p>
 </header>
 <main>
-<h2>🎮 Découvre les jeux</h2>
-<div class="games">
-<div class="game"><div class="emoji">🚗</div><h3>Rocket League</h3><p>Jeu gratuit</p><button onclick="alert('Découvre Rocket League sur son site officiel !')">Découvrir</button></div>
-<div class="game"><div class="emoji">🚌</div><h3>Fortnite</h3><p>Battle Royale</p><button onclick="alert('Découvre Fortnite sur son site officiel !')">Découvrir</button></div>
-<div class="game"><div class="emoji">⛏️</div><h3>Minecraft</h3><p>Survie et création</p><button onclick="alert('Découvre Minecraft sur son site officiel !')">Découvrir</button></div>
-<div class="game"><div class="emoji">⚔️</div><h3>Jeux PC</h3><p>À découvrir</p><button onclick="alert('Bientôt sur NEXUS !')">Découvrir</button></div>
+<h2>Découvre les jeux 🎮</h2>
+<input id="search" placeholder="🔍 Rechercher un jeu..." oninput="filterGames()">
+<div class="filters">
+<button onclick="setFilter('Tous')">Tous</button>
+<button onclick="setFilter('PC')">PC</button>
+<button onclick="setFilter('Switch')">Nintendo Switch</button>
 </div>
+<div class="games" id="games">
+<div class="game" data-category="PC Switch">
+<div class="emoji">🚗</div>
+<h3>Rocket League</h3>
+<p>Gratuit • PC / Switch</p>
+<button onclick="window.open('https://www.rocketleague.com/','_blank')">Découvrir</button>
+</div>
+<div class="game" data-category="PC Switch">
+<div class="emoji">🚌</div>
+<h3>Fortnite</h3>
+<p>Gratuit • PC / Switch</p>
+<button onclick="window.open('https://www.fortnite.com/','_blank')">Découvrir</button>
+</div>
+<div class="game" data-category="PC Switch">
+<div class="emoji">🍂</div>
+<h3>Fall Guys</h3>
+<p>Gratuit • PC / Switch</p>
+<button onclick="window.open('https://www.fallguys.com/','_blank')">Découvrir</button>
+</div>
+<div class="game" data-category="PC">
+<div class="emoji">🔫</div>
+<h3>Valorant</h3>
+<p>Gratuit • PC</p>
+<button onclick="window.open('https://playvalorant.com/','_blank')">Découvrir</button>
+</div>
+<div class="game" data-category="PC Switch">
+<div class="emoji">⚔️</div>
+<h3>Warframe</h3>
+<p>Gratuit • PC / Switch</p>
+<button onclick="window.open('https://www.warframe.com/','_blank')">Découvrir</button>
+</div>
+<div class="game" data-category="PC">
+<div class="emoji">🧱</div>
+<h3>Roblox</h3>
+<p>Gratuit • PC</p>
+<button onclick="window.open('https://www.roblox.com/','_blank')">Découvrir</button>
+</div>
+</div>
+<p id="empty" style="display:none">Aucun jeu trouvé.</p>
 </main>
-<footer>© NEXUS GAMING</footer>
+<footer>© NEXUS GAMING • Play your universe</footer>
+<script>
+let currentFilter='Tous';
+function filterGames(){
+const search=document.getElementById('search').value.toLowerCase();
+let count=0;
+document.querySelectorAll('.game').forEach(game=>{
+const matchName=game.innerText.toLowerCase().includes(search);
+const matchCategory=currentFilter==='Tous'||game.dataset.category.includes(currentFilter);
+game.style.display=matchName&&matchCategory?'block':'none';
+if(matchName&&matchCategory)count++;
+});
+document.getElementById('empty').style.display=count?'none':'block';
+}
+function setFilter(category){
+currentFilter=category;
+filterGames();
+}
+</script>
 </body>
 </html>
